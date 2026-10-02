@@ -150,7 +150,7 @@ function updateSelected(){
 }
 function renderPalette(){
   for(const high of [false,true])$(high?'high-palette':'base-palette').innerHTML=Music.pitches.map(p=>{
-    const note={id:p.id,high};return `<button class="pitch ${high?'high':''} ${chosen.id===p.id&&chosen.high===high?'selected':''}" data-pitch="${p.id}" data-high="${high}" aria-label="${label(note)}" aria-pressed="${chosen.id===p.id&&chosen.high===high}" title="${label(note)} · 끌어서 놓기"><span class="glyph">${glyph(note)}</span><small>${p.sol}${high?' ↑':''}</small></button>`;
+    const note={id:p.id,high};return `<button class="pitch ${high?'high':''} ${chosen.id===p.id&&chosen.high===high?'selected':''}" data-pitch="${p.id}" data-high="${high}" aria-label="${label(note)}" aria-pressed="${chosen.id===p.id&&chosen.high===high}" title="${label(note)} · 끌어서 놓기"><span class="glyph">${glyph(note)}</span></button>`;
   }).join('');
   $('tie-pitch').classList.toggle('selected',chosen.id==='tie');$('tie-pitch').setAttribute('aria-pressed',String(chosen.id==='tie'));
   $('rest-pitch').classList.toggle('selected',chosen.id==='rest');
