@@ -24,6 +24,8 @@
 .score-row:nth-child(odd) .beats{border-right:5px solid #235dae}
 .score-row:nth-child(even) .beats{border-left:0}
 .score-row:nth-child(even) .beat-labels{border-left:3px solid transparent}
+</style><style>
+.start-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#eaf3ff;border:1px solid #b8d1ee;border-radius:10px;padding:14px;margin-bottom:16px}.start-controls label{font-size:14px}.start-controls select{font:inherit;padding:8px;border:1px solid #b8d1ee;border-radius:6px}.start-controls>span{flex-basis:100%;font-size:13px;color:#52667a}.start-controls .btn{background:#235dae;color:white}.row-tools{display:flex;align-items:center;gap:6px;padding:8px;flex-wrap:wrap;background:#f3f7fb}.row-tools strong{margin-right:auto}.row-tools .btn{min-height:38px;padding:6px 9px;font-size:13px}.score .score-row .beat-labels{padding-top:8px}.score .score-row .beat-labels span:first-child{display:none}
 </style></head>
 <body>
 <header><div class="topbar"><div class="brand"><div class="mark" aria-hidden="true"><i></i><i></i><i></i><i></i></div><div><h1>가락</h1><span>정간보로 만드는 나의 음악</span></div></div><div class="meter-tag" id="meter-tag"><b>3소박</b> 4박 정간보</div></div></header>
@@ -49,8 +51,8 @@
 <section aria-label="정간보 작곡 영역">
 <div class="score-heading"><div><div class="eyebrow">2. 가락 만들기</div><h2>나의 정간보</h2><p>왼쪽 행 → 오른쪽 행 → 다음 줄 순서로 읽어요.</p></div><div class="tiny-actions"><button class="btn" id="undo" disabled aria-label="되돌리기">↶ 되돌리기</button><button class="btn" id="clear">모두 지우기</button></div></div>
 <div class="editbar"><span class="edit-label" id="edit-label">놓은 음을 선택해 음높이를 바꾸거나 지우세요.</span><button class="btn" id="octave" disabled>청음으로 ↑</button><button class="btn" id="remove" disabled>음 지우기</button></div>
-<div class="meter-control"><label for="meter">정간보 형식</label><select id="meter"><option value="4">3소박 4박</option><option value="3">3소박 3박</option></select><span>가락 순서를 유지하며 행을 다시 나눕니다.</span></div><div class="transport" aria-label="재생 조절"><button class="btn play" id="play"><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M6 3v14l11-7z"/></svg><span>재생</span></button><button class="btn stop" id="stop" disabled aria-label="정지"><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><rect x="5" y="5" width="10" height="10" rx="1"/></svg><span>정지</span></button><div class="tempo"><label for="tempo">빠르기</label><input id="tempo" type="range" min="20" max="160" value="80" step="1"><output for="tempo" id="tempo-value">80 BPM</output></div><span class="play-state" id="play-state" role="status">가락을 만들어보세요</span></div>
-<div class="score-paper"><div class="paper-head"><strong id="meter-description">한 행에 4박 · 한 박에 3소박</strong><span>한 소박에 음·기호 2개까지</span></div><div class="score-scroll"><div class="score" id="score"></div></div><div class="paper-bottom"><button class="btn add" id="add-row">＋ 행 추가</button><span id="score-count">4행 · 16박 · 0음</span></div></div>
+<div class="meter-control"><label for="meter">정간보 형식</label><select id="meter"><option value="4">3소박 4박</option><option value="3">3소박 3박</option></select><span>가락 순서를 유지하며 행을 다시 나눕니다.</span></div><div class="transport" aria-label="재생 조절"><button class="btn play" id="play"><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M6 3v14l11-7z"/></svg><span>처음부터 재생</span></button><button class="btn stop" id="stop" disabled aria-label="정지"><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><rect x="5" y="5" width="10" height="10" rx="1"/></svg><span>정지</span></button><div class="tempo"><label for="tempo">빠르기</label><input id="tempo" type="range" min="20" max="160" value="80" step="1"><output for="tempo" id="tempo-value">80 BPM</output></div><span class="play-state" id="play-state" role="status">가락을 만들어보세요</span></div>
+<div class="start-controls"><strong>중간부터 듣기</strong><label>시작 행 <select id="start-row"></select></label><label>시작 소박 <select id="start-cell"></select></label><button class="btn" id="play-here">▶ 여기부터 재생</button><span>음을 누르면 시작 위치가 바뀌어요. 빈칸은 위 목록에서 골라요.</span></div><div class="score-paper"><div class="paper-head"><strong id="meter-description">한 행에 4박 · 한 박에 3소박</strong><span>한 소박에 음·기호 2개까지</span></div><div class="score-scroll"><div class="score" id="score"></div></div><div class="paper-bottom"><button class="btn add" id="add-row">＋ 행 추가</button><span id="score-count">4행 · 16박 · 0음</span></div></div>
 <p class="mobile-hint">정간보를 가로로 밀면 오른쪽 박까지 볼 수 있어요.</p>
 
 </section>
@@ -108,14 +110,23 @@ const Music = (() => {
     });
     return {events:events.sort((a,b)=>a.start-b.start),duration,sub};
   }
-  return {pitches,emptyRow,rowFor,reflow,pitchOf,frequency,validNote,place,timeline};
+  function fromPosition(rows,bpm,row,cell){
+    const full=timeline(rows,bpm),offset=(row*rows[0].length+cell)*full.sub;
+    if(!Number.isInteger(row)||!Number.isInteger(cell)||row<0||row>=rows.length||cell<0||cell>=rows[0].length)throw Error('잘못된 시작 위치');
+    return {...full,offset,duration:full.duration-offset,events:full.events.filter(e=>e.start+e.duration>offset+1e-8).map(e=>({...e,start:Math.max(0,e.start-offset),duration:e.duration-Math.max(0,offset-e.start)}))};
+  }
+  function pasteRow(rows,target,copied){
+    if(!Number.isInteger(target)||!rows[target]||!Array.isArray(copied)||copied.length!==rows[target].length||!copied.every(c=>Array.isArray(c)&&c.length<=2&&c.every(validNote)))throw Error('같은 박 수의 행만 붙여넣을 수 있어요.');
+    return rows.map((r,i)=>(i===target?copied:r).map(c=>c.map(n=>({...n}))));
+  }
+  return {pitches,emptyRow,rowFor,reflow,pitchOf,frequency,validNote,place,timeline,fromPosition,pasteRow};
 })();
 </script>
 <script>
 (() => {
 'use strict';
 const $=id=>document.getElementById(id);
-let beats=3,padding=0;
+let beats=3,padding=0,copiedRow=null;
 const width=()=>beats*3;
 let rows=Array.from({length:4},()=>Music.rowFor(beats)),chosen={id:'im',high:false},selected=null,history=[];
 let audio=null,master=null,voices=new Set(),playing=false,playToken=0,run=null,ticker=null,frame=null,toastTimer=null;
@@ -131,6 +142,7 @@ function remember(){history.push(JSON.stringify({rows,beats,padding}));if(histor
 function updateSelected(){
   const note=selected&&rows[selected.row]?.[selected.cell]?.[selected.index];
   if(!note)selected=null;
+  if(note){$('start-row').value=String(selected.row);$('start-cell').value=String(selected.cell);}
   $('octave').disabled=!note||!Music.pitchOf(note);$('remove').disabled=!note;
   $('edit-label').innerHTML=note?`선택한 기호 <b>${label(note)}</b>`:'정간보에 놓은 음을 누르면 여기서 바꿀 수 있어요.';
   $('octave').textContent=note?.high?'↓ 낮은 음으로 (기본음)':'↑ 높은 음으로 (청음)';
@@ -148,7 +160,11 @@ function renderPalette(){
 function render(){
   $('meter').value=String(beats);$('score').style.setProperty('--beats',beats);$('score').classList.toggle('three-beats',beats===3);
   $('meter-tag').innerHTML='<b>3소박</b> '+beats+'박 정간보';$('meter-description').textContent='한 줄에 2행 · '+beats+'박씩 구분 · 한 박에 3소박';
-  $('score').innerHTML=rows.map((r,row)=>`<div class="score-row"><div class="beat-labels" aria-hidden="true"><span>${row+1}행</span>${Array.from({length:beats},(_,i)=>`<span>${i+1}박</span>`).join('')}</div><span class="row-no">${String(row+1).padStart(2,'0')}</span><div class="beats">${Array.from({length:beats},(_,beat)=>`<div class="beat">${[0,1,2].map(sub=>{const cell=beat*3+sub,notes=r[cell];return `<div class="cell ${!notes.length?'empty':''} ${notes.length===2?'double':''}" data-row="${row}" data-cell="${cell}" data-sub="${sub+1}" tabindex="0" role="group" aria-label="${row+1}행 ${beat+1}박 ${sub+1}소박: ${notes.length?notes.map(name).join(', '):'비어 있음'}">${notes.map((n,index)=>`<button class="score-note ${n.id==='rest'?'rest':''} ${n.high?'high':''} ${selected?.row===row&&selected?.cell===cell&&selected?.index===index?'active':''}" data-index="${index}" aria-label="${row+1}행 ${beat+1}박 ${sub+1}소박 ${index+1}번째 ${name(n)}" title="${label(n)} · 선택 또는 끌어서 옮기기"><span class="glyph">${glyph(n)}</span></button>`).join('')}</div>`;}).join('')}</div>`).join('')}</div></div>`).join('');
+  $('score').innerHTML=rows.map((r,row)=>`<div class="score-row"><div class="row-tools"><strong>${row+1}행</strong><button class="btn" data-row-action="play" data-target-row="${row}" aria-label="${row+1}행부터 재생">▶ 듣기</button><button class="btn" data-row-action="copy" data-target-row="${row}" aria-label="${row+1}행 복사">복사</button><button class="btn" data-row-action="paste" data-target-row="${row}" aria-label="${row+1}행에 붙여넣기" ${copiedRow?.length===width()?'':'disabled'}>붙여넣기</button></div><div class="beat-labels" aria-hidden="true"><span>${row+1}행</span>${Array.from({length:beats},(_,i)=>`<span>${i+1}박</span>`).join('')}</div><span class="row-no">${String(row+1).padStart(2,'0')}</span><div class="beats">${Array.from({length:beats},(_,beat)=>`<div class="beat">${[0,1,2].map(sub=>{const cell=beat*3+sub,notes=r[cell];return `<div class="cell ${!notes.length?'empty':''} ${notes.length===2?'double':''}" data-row="${row}" data-cell="${cell}" data-sub="${sub+1}" tabindex="0" role="group" aria-label="${row+1}행 ${beat+1}박 ${sub+1}소박: ${notes.length?notes.map(name).join(', '):'비어 있음'}">${notes.map((n,index)=>`<button class="score-note ${n.id==='rest'?'rest':''} ${n.high?'high':''} ${selected?.row===row&&selected?.cell===cell&&selected?.index===index?'active':''}" data-index="${index}" aria-label="${row+1}행 ${beat+1}박 ${sub+1}소박 ${index+1}번째 ${name(n)}" title="${label(n)} · 선택 또는 끌어서 옮기기"><span class="glyph">${glyph(n)}</span></button>`).join('')}</div>`;}).join('')}</div>`).join('')}</div></div>`).join('');
+  const oldRow=Number($('start-row').value)||0,oldCell=Number($('start-cell').value)||0;
+  $('start-row').innerHTML=rows.map((_,i)=>'<option value="'+i+'">'+(i+1)+'행</option>').join('');
+  $('start-cell').innerHTML=Array.from({length:width()},(_,i)=>'<option value="'+i+'">'+(Math.floor(i/3)+1)+'박 '+(i%3+1)+'소박</option>').join('');
+  $('start-row').value=String(Math.min(oldRow,rows.length-1));$('start-cell').value=String(Math.min(oldCell,width()-1));
   $('score-count').textContent=`${rows.length}행 · ${scoreSummary()}`;
   $('undo').disabled=!history.length;$('clear').disabled=!count();
   if(!playing)$('play-state').textContent=count()?`소금 · ${scoreSummary()}`:'소금으로 가락을 만들어보세요';
@@ -189,20 +205,20 @@ function stopPlayback(message){
   ++playToken;++auditionToken;playing=false;clearInterval(ticker);cancelAnimationFrame(frame);ticker=null;frame=null;run=null;
   for(const voice of voices){try{voice.stop();}catch{}}voices.clear();
   document.querySelectorAll('.playing,.sounding,.held,.resting').forEach(el=>el.classList.remove('playing','sounding','held','resting'));
-  $('play').disabled=false;$('play').querySelector('span').textContent='재생';$('stop').disabled=true;$('tempo').disabled=false;
+  $('play').disabled=false;$('play').querySelector('span').textContent='처음부터 재생';$('stop').disabled=true;$('tempo').disabled=false;
   $('play-state').textContent=message||(count()?`소금 · ${scoreSummary()}`:'소금으로 가락을 만들어보세요');
 }
-async function startPlayback(){
+async function startPlayback(startRow=0,startCell=0){
   if(playing)return;if(!count()){notify('먼저 정간보에 율명을 놓아주세요.');return;}
   stopPlayback();const token=playToken; $('play').disabled=true;$('play-state').textContent='소금 소리 준비 중…';
   try{await audioReady();}catch(e){$('play').disabled=false;notify(e.message);return;}
   if(token!==playToken){$('play').disabled=false;return;}
-  const timeline=Music.timeline(rows,Number($('tempo').value));
+  const timeline=Music.fromPosition(rows,Number($('tempo').value),startRow,startCell);
   run={...timeline,start:audio.currentTime+.07,next:0,notes:timeline.events.filter(e=>e.type==='note'),last:-1};playing=true;
   $('play').querySelector('span').textContent='연주 중';$('stop').disabled=false;$('tempo').disabled=true;
   const schedule=()=>{if(!run)return;while(run.next<run.notes.length&&run.start+run.notes[run.next].start<audio.currentTime+.15){const e=run.notes[run.next++];tone(e.frequency,run.start+e.start,e.duration,e.legato);}};
   const animate=()=>{if(!playing||!run)return;const t=audio.currentTime-run.start;if(t>=run.duration){stopPlayback('재생을 마쳤어요');return;}
-    if(t>=0){const linear=Math.min(rows.length*width()-1,Math.floor(t/run.sub)),row=Math.floor(linear/width()),cell=linear%width();
+    if(t>=0){const linear=Math.min(rows.length*width()-1,Math.floor((t+run.offset)/run.sub)),row=Math.floor(linear/width()),cell=linear%width();
       if(linear!==run.last){document.querySelectorAll('.playing,.sounding,.held,.resting').forEach(el=>el.classList.remove('playing','sounding','held','resting'));document.querySelector(`[data-row="${row}"][data-cell="${cell}"]`)?.classList.add('playing');run.last=linear;}
       const active=run.notes.find(e=>t>=e.start&&t<e.start+e.duration),current=document.querySelector(`[data-row="${row}"][data-cell="${cell}"]`);
       current?.classList.toggle('held',!!active&&(!rows[row][cell].length||rows[row][cell].every(n=>n.id==='tie')));current?.classList.toggle('resting',!active);
@@ -262,7 +278,16 @@ $('meter').addEventListener('change',()=>{
   const result=count()?Music.reflow(rows,next,padding):{rows:rows.map(()=>Music.rowFor(next)),padding:0};if(result.rows.length>24){$('meter').value=String(beats);notify('24행을 넘어서 형식을 바꿀 수 없어요.');return;}
   stopPlayback();remember();beats=next;rows=result.rows;padding=result.padding;selected=null;render();notify('3소박 '+beats+'박으로 바꿨어요.');
 });
-$('play').addEventListener('click',startPlayback);$('stop').addEventListener('click',()=>stopPlayback('정지했어요'));
+$('play').addEventListener('click',()=>startPlayback(0,0));
+$('play-here').addEventListener('click',()=>{stopPlayback();startPlayback(Number($('start-row').value),Number($('start-cell').value));});
+document.addEventListener('click',e=>{
+  const b=e.target.closest('[data-row-action]');if(!b)return;const row=Number(b.dataset.targetRow);
+  if(b.dataset.rowAction==='copy'){copiedRow=rows[row].map(c=>c.map(n=>({...n})));render();notify((row+1)+'행을 복사했어요. 원하는 행의 붙여넣기를 누르세요.');}
+  if(b.dataset.rowAction==='paste'){
+    if(!copiedRow)return;try{const next=Music.pasteRow(rows,row,copiedRow);stopPlayback();remember();rows=next;padding=0;selected=null;render();$('start-row').value=String(row);$('start-cell').value='0';notify((row+1)+'행에 붙여넣었어요. 되돌리기로 복원할 수 있어요.');}catch(err){notify(err.message);}
+  }
+  if(b.dataset.rowAction==='play'){stopPlayback();$('start-row').value=String(row);$('start-cell').value='0';startPlayback(row,0);}
+});$('stop').addEventListener('click',()=>stopPlayback('정지했어요'));
 $('tempo').addEventListener('input',()=>$('tempo-value').textContent=$('tempo').value+' BPM');
 $('undo').addEventListener('click',undo);$('octave').addEventListener('click',changeOctave);$('remove').addEventListener('click',removeNote);
 $('clear').addEventListener('click',()=>{if(!count())return;stopPlayback();remember();rows=rows.map(()=>Music.rowFor(beats));padding=0;selected=null;render();notify('정간보를 비웠어요. 되돌리기로 복원할 수 있어요.');});
