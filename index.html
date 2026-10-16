@@ -34,7 +34,7 @@
 .floating-playback .transport{margin-bottom:8px;padding:10px 14px}.floating-playback .start-controls{margin-bottom:0;padding:10px 14px}.floating-playback .start-controls>span{display:none}
 .cell{scroll-margin-top:210px}
 @media(max-width:900px){.palette-panel{max-height:27dvh;top:4px;padding:10px 12px}.palette-panel .palette-head,.palette-panel .intro,.palette-panel .eyebrow,.palette-panel .hint,.palette-panel .selection{display:none}.palette-panel .group-title{margin:4px 0;font-size:12px}.palette-panel .palette-group+.palette-group{margin-top:4px}.palette-panel .pitch{min-height:40px;padding:3px}.palette-panel .rest-palette{display:flex;gap:8px;align-items:center}.palette-panel .rest-palette .group-title{display:none}.palette-panel .rest-chip{margin:4px 0;min-height:36px}.floating-playback{top:calc(27dvh + 12px)}.floating-playback .transport,.floating-playback .start-controls{padding:6px 8px;gap:6px}.floating-playback .start-controls strong{display:none}.floating-playback .btn{min-height:36px;padding:6px 8px}.floating-playback .start-controls select{padding:5px}.floating-playback .play-state{display:none}.cell{scroll-margin-top:calc(27dvh + 180px)}}
-</style><style>.floating-playback .editbar{margin:0 0 8px;padding:8px 12px;gap:7px;box-shadow:none}.floating-playback .editbar .btn{min-height:38px;font-size:14px;padding:7px 10px}.floating-playback .edit-label{font-size:13px}.cell{scroll-margin-top:310px}@media(max-width:900px){.floating-playback .editbar{padding:6px 8px;gap:5px}.floating-playback .editbar .btn{font-size:12px;min-height:34px;padding:5px 7px}.floating-playback .edit-label{display:none}.cell{scroll-margin-top:calc(27dvh + 240px)}}</style><style>.cell[data-sub="1"]{background:#fff0f0}.cell[data-sub="1"]:hover{background:#ffe5e5}.cell[data-sub="1"].playing{background:#fff0d7}.cell[data-sub="1"].held{background:#e7f3ef}.cell[data-sub="1"].resting{background:#f2eee9}.cell[data-sub="1"].drop-target{background:#dfedff}.cell[data-sub="1"].full-target{background:#fff0eb}.row-tools .delete-row{color:#a84348;border-color:#edccd0;background:#fff5f5}</style></head>
+</style><style>.floating-playback .editbar{margin:0 0 8px;padding:8px 12px;gap:7px;box-shadow:none}.floating-playback .editbar .btn{min-height:38px;font-size:14px;padding:7px 10px}.floating-playback .edit-label{font-size:13px}.cell{scroll-margin-top:310px}@media(max-width:900px){.floating-playback .editbar{padding:6px 8px;gap:5px}.floating-playback .editbar .btn{font-size:12px;min-height:34px;padding:5px 7px}.floating-playback .edit-label{display:none}.cell{scroll-margin-top:calc(27dvh + 240px)}}</style><style>.cell[data-sub="1"]{background:#fff0f0}.cell[data-sub="1"]:hover{background:#ffe5e5}.cell[data-sub="1"].playing{background:#fff0d7}.cell[data-sub="1"].held{background:#e7f3ef}.cell[data-sub="1"].resting{background:#f2eee9}.cell[data-sub="1"].drop-target{background:#dfedff}.cell[data-sub="1"].full-target{background:#fff0eb}.row-tools .delete-row{color:#a84348;border-color:#edccd0;background:#fff5f5}</style><style>.save-tools{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:10px 0 16px;padding:12px;border:1px solid #c9ded4;border-radius:10px;background:#f1faf5}.save-tools small{flex-basis:100%;color:#52667a}.save-tools .btn{margin-left:auto;color:#235dae}</style></head>
 <body>
 <header><div class="topbar"><div class="brand"><div class="mark" aria-hidden="true"><i></i><i></i><i></i><i></i></div><div><h1>가락</h1><span>정간보로 만드는 나의 음악</span></div></div><div class="meter-tag" id="meter-tag"><b>3소박</b> 4박 정간보</div></div></header>
 <main class="workspace">
@@ -60,7 +60,7 @@
 <div class="score-heading"><div><div class="eyebrow">2. 가락 만들기</div><h2>나의 정간보</h2><p>왼쪽 행 → 오른쪽 행 → 다음 줄 순서로 읽어요.</p></div></div>
 
 <div class="meter-control"><label for="meter">정간보 형식</label><select id="meter"><option value="4">3소박 4박</option><option value="3">3소박 3박</option></select><span>가락 순서를 유지하며 행을 다시 나눕니다.</span></div><div class="floating-playback"><div class="editbar" role="group" aria-label="음 편집 도구"><span class="edit-label" id="edit-label">놓은 음을 선택해 음높이를 바꾸거나 지우세요.</span><button class="btn" id="octave" disabled>청음으로 ↑</button><button class="btn" id="remove" disabled>음 지우기</button><button class="btn" id="undo" disabled aria-label="되돌리기">↶ 되돌리기</button><button class="btn" id="clear">모두 지우기</button></div><div class="transport" aria-label="재생 조절"><button class="btn play" id="play"><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M6 3v14l11-7z"/></svg><span>처음부터 재생</span></button><button class="btn stop" id="stop" disabled aria-label="정지"><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><rect x="5" y="5" width="10" height="10" rx="1"/></svg><span>정지</span></button><div class="tempo"><label for="tempo">빠르기</label><input id="tempo" type="range" min="20" max="160" value="80" step="1"><output for="tempo" id="tempo-value">80 BPM</output></div><span class="play-state" id="play-state" role="status">가락을 만들어보세요</span></div>
-<div class="start-controls"><strong>중간부터 듣기</strong><label>시작 행 <select id="start-row"></select></label><label>시작 소박 <select id="start-cell"></select></label><button class="btn" id="play-here">▶ 여기부터 재생</button><span>음을 누르면 시작 위치가 바뀌어요. 빈칸은 위 목록에서 골라요.</span></div></div><div class="score-paper"><div class="paper-head"><strong id="meter-description">한 행에 4박 · 한 박에 3소박</strong><span>한 소박에 음·기호 2개까지</span></div><div class="score-scroll"><div class="score" id="score"></div></div><div class="paper-bottom"><button class="btn add" id="add-row">＋ 행 추가</button><span id="score-count">4행 · 16박 · 0음</span></div></div>
+<div class="start-controls"><strong>중간부터 듣기</strong><label>시작 행 <select id="start-row"></select></label><label>시작 소박 <select id="start-cell"></select></label><button class="btn" id="play-here">▶ 여기부터 재생</button><span>음을 누르면 시작 위치가 바뀌어요. 빈칸은 위 목록에서 골라요.</span></div></div><div class="save-tools"><span id="save-status" role="status">이 브라우저에 자동 저장됩니다.</span><button class="btn" id="download-png">그림파일 다운로드 (PNG)</button><small>같은 기기·브라우저에서 이어서 작업할 수 있어요. 브라우저 데이터를 지우면 저장 내용도 지워져요.</small></div><div class="score-paper"><div class="paper-head"><strong id="meter-description">한 행에 4박 · 한 박에 3소박</strong><span>한 소박에 음·기호 2개까지</span></div><div class="score-scroll"><div class="score" id="score"></div></div><div class="paper-bottom"><button class="btn add" id="add-row">＋ 행 추가</button><span id="score-count">4행 · 16박 · 0음</span></div></div>
 <p class="mobile-hint">정간보를 가로로 밀면 오른쪽 박까지 볼 수 있어요.</p>
 
 </section>
@@ -156,6 +156,52 @@ function updateSelected(){
   $('octave').textContent=note?.high?'↓ 낮은 음으로 (기본음)':'↑ 높은 음으로 (청음)';
   $('remove').textContent=note?.id==='rest'?'× 쉼표 지우기':note?.id==='tie'?'× 이음표 지우기':'× 선택한 음 지우기';
 }
+
+const DRAFT_KEY='garak-jeongganbo.draft.v1';let lastSaved='',saveBlocked=false;
+const draft=()=>({version:1,beats,padding,bpm:Number($('tempo').value),rows});
+function validDraft(d){return d&&d.version===1&&[3,4].includes(d.beats)&&Number.isInteger(d.padding)&&d.padding>=0&&d.padding<d.beats*3&&Number.isInteger(d.bpm)&&d.bpm>=20&&d.bpm<=160&&Array.isArray(d.rows)&&d.rows.length>=1&&d.rows.length<=24&&d.rows.every(r=>Array.isArray(r)&&r.length===d.beats*3&&r.every(c=>Array.isArray(c)&&c.length<=2&&c.every(Music.validNote)));}
+function restoreDraft(){
+  try{const raw=localStorage.getItem(DRAFT_KEY);if(raw){const d=JSON.parse(raw);if(!validDraft(d))throw Error('invalid');rows=d.rows;beats=d.beats;padding=d.padding;$('tempo').value=d.bpm;$('tempo-value').textContent=d.bpm+' BPM';$('save-status').textContent='저장된 가락을 불러왔어요.';}lastSaved=JSON.stringify(draft());}
+  catch(e){saveBlocked=true;$('save-status').textContent='저장 내용을 읽지 못했어요. 그림파일로 보관해 주세요.';}
+}
+function saveDraft(){
+  if(saveBlocked)return;const value=JSON.stringify(draft());if(value===lastSaved)return;
+  try{localStorage.setItem(DRAFT_KEY,value);lastSaved=value;$('save-status').textContent='자동 저장 완료 · '+new Date().toLocaleTimeString('ko-KR');}
+  catch(e){$('save-status').textContent='자동 저장 실패 · 그림파일로 보관해 주세요.';}
+}
+window.addEventListener('storage',e=>{if(e.key===DRAFT_KEY&&e.newValue!==lastSaved){saveBlocked=true;$('save-status').textContent='다른 탭에서 저장 내용이 바뀌어 이 탭의 자동 저장을 멈췄어요. 현재 가락은 그림파일로 보관해 주세요.';}});
+async function downloadPNG(){
+  const button=$('download-png');button.disabled=true;
+  const snapshot=rows.map(r=>r.map(c=>c.map(n=>({...n})))),meter=beats,bpm=Number($('tempo').value);
+  try{
+    await document.fonts.ready;
+    const canvas=document.createElement('canvas'),w=1800,margin=60,rowWidth=840,cellWidth=rowWidth/(meter*3),lineHeight=190;
+    canvas.width=w;canvas.height=180+Math.ceil(snapshot.length/2)*lineHeight+75;
+    const ctx=canvas.getContext('2d');if(!ctx)throw Error('canvas');
+    ctx.fillStyle='#ffffff';ctx.fillRect(0,0,w,canvas.height);ctx.textAlign='left';ctx.fillStyle='#203448';ctx.font='bold 38px "Malgun Gothic",sans-serif';ctx.fillText('나의 정간보',margin,60);
+    ctx.font='22px "Malgun Gothic",sans-serif';ctx.fillText('3소박 '+meter+'박 · '+bpm+' BPM · 왼쪽 행 → 오른쪽 행 → 다음 줄',margin,104);
+    snapshot.forEach((r,ri)=>{
+      const x=margin+(ri%2)*rowWidth,y=160+Math.floor(ri/2)*lineHeight;
+      ctx.textAlign='left';ctx.font='bold 22px "Malgun Gothic",sans-serif';ctx.fillStyle='#235dae';ctx.fillText((ri+1)+'행',x+8,y-23);
+      r.forEach((notes,ci)=>{
+        const cx=x+ci*cellWidth;ctx.fillStyle=ci%3===0?'#fff0f0':'#ffffff';ctx.fillRect(cx,y,cellWidth,112);
+        ctx.strokeStyle='#d8e1e7';ctx.lineWidth=1;ctx.strokeRect(cx,y,cellWidth,112);
+        notes.forEach((n,ni)=>{const nx=cx+cellWidth*(ni+.5)/notes.length;ctx.fillStyle=n.high?'#235dae':n.id==='rest'?'#935d32':'#203448';ctx.textAlign='center';ctx.font='bold '+(notes.length===2?24:34)+'px "Malgun Gothic",sans-serif';const text=n.id==='tie'?'－':n.id==='rest'?'△':(n.high?'氵':'')+Music.pitchOf(n).name;ctx.fillText(text,nx,y+66,cellWidth/notes.length-4);});
+        ctx.textAlign='center';ctx.fillStyle='#607184';ctx.font='16px sans-serif';ctx.fillText(String(ci%3+1),cx+cellWidth/2,y+102);
+      });
+      ctx.strokeStyle='#627d91';ctx.lineWidth=2;ctx.strokeRect(x,y,rowWidth,112);
+      for(let b=1;b<meter;b++){ctx.beginPath();ctx.moveTo(x+b*cellWidth*3,y);ctx.lineTo(x+b*cellWidth*3,y+112);ctx.stroke();}
+      ctx.textAlign='center';ctx.font='18px "Malgun Gothic",sans-serif';ctx.fillStyle='#607184';for(let b=0;b<meter;b++)ctx.fillText((b+1)+'박',x+(b+.5)*cellWidth*3,y-4);
+      if(ri%2===0&&ri+1<snapshot.length){ctx.strokeStyle='#235dae';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(x+rowWidth,y);ctx.lineTo(x+rowWidth,y+112);ctx.stroke();}
+    });
+    ctx.textAlign='left';ctx.fillStyle='#607184';ctx.font='20px "Malgun Gothic",sans-serif';ctx.fillText('－와 빈칸: 앞 음 이어서 · △: 쉼표 · 氵: 한 옥타브 위',margin,canvas.height-34);
+    const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));if(!blob)throw Error('export');
+    const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='정간보-'+new Date().toISOString().slice(0,10)+'.png';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);notify('정간보 그림파일을 다운로드했어요.');
+  }catch(e){notify('그림파일을 만들지 못했어요. 다시 시도해 주세요.');}finally{button.disabled=false;}
+}
+$('download-png').addEventListener('click',downloadPNG);
+$('tempo').addEventListener('input',saveDraft);
+
 function renderPalette(){
   for(const high of [false,true])$(high?'high-palette':'base-palette').innerHTML=Music.pitches.map(p=>{
     const note={id:p.id,high};return `<button class="pitch ${high?'high':''} ${chosen.id===p.id&&chosen.high===high?'selected':''}" data-pitch="${p.id}" data-high="${high}" aria-label="${label(note)}" aria-pressed="${chosen.id===p.id&&chosen.high===high}" title="${label(note)} · 끌어서 놓기"><span class="glyph">${glyph(note)}</span></button>`;
@@ -176,7 +222,7 @@ function render(){
   $('score-count').textContent=`${rows.length}행 · ${scoreSummary()}`;
   $('undo').disabled=!history.length;$('clear').disabled=!count();
   if(!playing)$('play-state').textContent=count()?`소금 · ${scoreSummary()}`:'소금으로 가락을 만들어보세요';
-  updateSelected();
+  updateSelected();saveDraft();
 }
 async function audioReady(){
   if(!audio){const Audio=window.AudioContext||window.webkitAudioContext;if(!Audio)throw new Error('이 브라우저에서는 소리 재생을 지원하지 않아요.');audio=new Audio();master=audio.createGain();master.gain.value=.7;master.connect(audio.destination);}
@@ -305,7 +351,7 @@ $('undo').addEventListener('click',undo);$('octave').addEventListener('click',ch
 $('clear').addEventListener('click',()=>{if(!count())return;stopPlayback();remember();rows=rows.map(()=>Music.rowFor(beats));padding=0;selected=null;render();notify('정간보를 비웠어요. 되돌리기로 복원할 수 있어요.');});
 $('add-row').addEventListener('click',()=>{if(rows.length>=24){notify('최대 24행까지 만들 수 있어요.');return;}stopPlayback();remember();rows.push(Music.rowFor(beats));padding=0;render();notify(`${rows.length}행을 추가했어요.`);});
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&(playing||voices.size))stopPlayback('정지했어요');});
-renderPalette();render();
+restoreDraft();renderPalette();render();
 function replaceScore(input){
   const nextBeats=input?.beatsPerRow??(input?.rows?.[0]?.length===9?3:4);
   if(!input||typeof input!=='object'||Array.isArray(input)||Object.keys(input).some(k=>!['rows','bpm','beatsPerRow'].includes(k))||!Array.isArray(input.rows)||input.rows.length<1||input.rows.length>24||![3,4].includes(nextBeats)||!input.rows.every(r=>Array.isArray(r)&&r.length===nextBeats*3&&r.every(c=>Array.isArray(c)&&c.length<=2&&c.every(Music.validNote)))||!Number.isInteger(input.bpm)||input.bpm<20||input.bpm>160)throw new Error('정간보는 1~24행, 3박은 9소박·4박은 12소박, 소박마다 최대 2기호, 빠르기는 20~160의 정수여야 합니다.');
